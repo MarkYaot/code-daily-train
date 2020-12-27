@@ -18,10 +18,15 @@ public class UseSourceSink {
         CharSink charSink = Files.asCharSink(file, DEFAULT_CHARSET, new FileWriteMode[]{FileWriteMode.APPEND});
 
         try {
+            //使用字节流写入文件
             byteSink.write("aaa".getBytes());
+            //使用字节流读取文件
             System.out.println(Arrays.toString(byteSource.read()));
+            //使用字符流读取文件
             System.out.println(charSource.read());
+            //使用字符流写入文件
             charSink.write("bbb");
+            //使用字符流读取文件
             System.out.print(charSource.read());
         } catch (IOException e) {
             e.printStackTrace();

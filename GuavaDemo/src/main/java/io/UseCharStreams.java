@@ -15,6 +15,8 @@ public class UseCharStreams {
         try {
             in = new URL("https://www.baidu.com").openStream();
             byte[] bytes = new byte[10];
+            
+            //读取字符流并打印
             CharStreams.readLines(new InputStreamReader(in));
             System.out.println(Arrays.toString(bytes));
         } catch (MalformedURLException e) {

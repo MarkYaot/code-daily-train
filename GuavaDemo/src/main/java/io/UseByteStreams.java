@@ -14,6 +14,8 @@ public class UseByteStreams {
         try {
             in = new URL("https://www.baidu.com").openStream();
             byte[] bytes = new byte[10];
+
+            //读取字节流并打印
             ByteStreams.readFully(in, bytes);
             System.out.println(Arrays.toString(bytes));
         } catch (MalformedURLException e) {
