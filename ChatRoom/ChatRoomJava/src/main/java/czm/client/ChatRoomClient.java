@@ -65,6 +65,8 @@ public class ChatRoomClient {
             } catch (IOException e) {
                 logger.error("Connection to server failed! address:{}, port:{}", address, port);
                 return;
+            } finally {
+                isRunning = false;
             }
         }
 
