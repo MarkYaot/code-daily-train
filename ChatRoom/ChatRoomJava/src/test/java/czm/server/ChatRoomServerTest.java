@@ -5,6 +5,6 @@ import czm.exception.ServerException;
 public class ChatRoomServerTest {
     public static void main(String[] args) throws ServerException {
         ChatRoomServer server = ChatRoomServer.getSingleton();
-        server.start(9000);
+        server.start(1000);
     }
 }

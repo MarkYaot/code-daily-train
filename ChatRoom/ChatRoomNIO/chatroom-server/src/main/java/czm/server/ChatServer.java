@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -20,13 +19,17 @@ public class ChatServer {
 
     private static final String SERVER_PROPERTIES_FILE = "server.properties";
 
-    private static final String PROPERTIES_SERVER_PORT = "port";
+    private static final String PROPERTIES_QUIT_MARK = "server.quit.mark";
 
-    private static final String PROPERTIES_SERVER_HOST = "host";
+    private static final String PROPERTIES_SERVER_PORT = "server.port";
+
+    private static final String PROPERTIES_SERVER_HOST = "server.host";
 
     private boolean isRunning = false;
 
     private ServerSocketChannel serverSocketChannel;
+
+    private String quitMark;
 
     private Selector selector;
 
@@ -37,16 +40,20 @@ public class ChatServer {
 
             Properties prop = new Properties();
             prop.load(ClassLoader.getSystemResourceAsStream(SERVER_PROPERTIES_FILE));
+            quitMark = prop.getProperty(PROPERTIES_QUIT_MARK);
+            int port = Integer.parseInt(prop.getProperty(PROPERTIES_SERVER_PORT));
+            logger.info("server port:{}", port);
+
             serverSocketChannel = ServerSocketChannel.open();
-            serverSocketChannel.socket().bind(new InetSocketAddress(prop.getProperty(PROPERTIES_SERVER_HOST),
-                    Integer.valueOf(prop.getProperty(PROPERTIES_SERVER_PORT))));
             serverSocketChannel.configureBlocking(false);
+            serverSocketChannel.socket().bind(new InetSocketAddress(port));
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
             logger.info("Chat Server is started!");
         } catch (IOException e) {
             logger.error("Server start failed! error:{}", e.getMessage());
             throw new ServerException(e.getMessage());
         }
+
         new Thread(new SelectorThread()).start();
     }
 
@@ -85,6 +92,37 @@ public class ChatServer {
             }
         }
 
+        private void dealOnline(SelectionKey key, String username) throws IOException {
+            key.attach(username);
+            String message = username + " is online";
+            logger.info(message);
+            broadcaseMsg(username, message);
+        }
+
+        private void dealSendMsg(SelectionKey key, String message) throws IOException {
+            String username = (String) key.attachment();
+            message = username + " says: " + message;
+            logger.info(message);
+            broadcaseMsg(username, message);
+        }
+
+        private void dealOffline(SelectionKey key) throws IOException {
+            String username = (String) key.attachment();
+            key.channel().close();
+            String message = username + " is offline";
+            logger.info(message);
+            broadcaseMsg(username, message);
+        }
+
+        private void broadcaseMsg(String sourceUser, String message) throws IOException {
+            Map<String, SocketChannel> map = getConnectedChannel();
+            for (String targetUser : map.keySet()) {
+                if (!StringUtils.isEmpty(targetUser) && !targetUser.equals(sourceUser)) {
+                    map.get(targetUser).write(StandardCharsets.UTF_8.encode(message));
+                }
+            }
+        }
+
         private void handleRead(SelectionKey key) throws IOException {
             try {
                 //读取
@@ -93,30 +131,15 @@ public class ChatServer {
                 socketChannel.read(buffer);
                 buffer.flip();
                 String message = StandardCharsets.UTF_8.decode(buffer).toString();
-                boolean isLogin = false;
                 if (key.attachment() == null) {
-                    key.attach(message);
-                    message += " is online";
-                    isLogin = true;
-                    logger.info(message);
-                }
-
-                //转发
-                buffer.clear();
-                Map<String, SocketChannel> map = getConnectedChannel();
-                String sourceUser = (String) key.attachment();
-                if (!isLogin) {
-                    logger.info(sourceUser + " says:" + message);
-                }
-                for (String targetUser : map.keySet()) {
-                    if (!StringUtils.isEmpty(targetUser) && !targetUser.equals(sourceUser)) {
-                        StringBuilder builder = new StringBuilder();
-                        if (!isLogin) {
-                            builder.append(targetUser).append(" says:");
-                        }
-                        builder.append(message);
-                        map.get(targetUser).write(StandardCharsets.UTF_8.encode(builder.toString()));
-                    }
+                    //用户上线
+                    dealOnline(key, message);
+                } else if (quitMark.equals(message)) {
+                    //用户下线
+                    dealOffline(key);
+                } else {
+                    //转发消息
+                    dealSendMsg(key, message);
                 }
             } catch (IOException e) {
                 logger.error("handle read failed! error:{}", e.getMessage());
@@ -141,5 +164,10 @@ public class ChatServer {
                     map.put((String) item.attachment(), (SocketChannel) item.channel()));
             return map;
         }
+    }
+
+    public static void main(String[] args) throws ServerException {
+        ChatServer server = new ChatServer();
+        server.start();
     }
 }

@@ -19,7 +19,7 @@ public class ChatClient {
 
     private static final String CLIENT_PROPERTIES_FILE = "client.properties";
 
-    private static final String PROPERTIES_QUIT_MARK = "quit.mark";
+    private static final String PROPERTIES_QUIT_MARK = "client.quit.mark";
 
     private int port;
 
