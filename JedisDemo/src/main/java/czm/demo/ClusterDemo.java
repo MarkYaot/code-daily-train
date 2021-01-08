@@ -11,8 +11,8 @@ import redis.clients.jedis.JedisCluster;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ClusterTest {
-    private static final Logger logger = LoggerFactory.getLogger(ClusterTest.class);
+public class ClusterDemo {
+    private static final Logger logger = LoggerFactory.getLogger(ClusterDemo.class);
 
     public static void main(String[] args) {
         String host = PropertiesUtil.getRedisProperties("host");
@@ -28,5 +28,6 @@ public class ClusterTest {
         jedisCluster.del("name");
         jedisCluster.set("name", "czm");
         logger.info(jedisCluster.get("name"));
+        jedisCluster.close();
     }
 }

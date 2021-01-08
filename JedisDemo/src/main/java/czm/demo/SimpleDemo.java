@@ -9,8 +9,8 @@ import redis.clients.jedis.Jedis;
 /**
  * 最简单的测试：连接redis写入一个key,断开连接
  */
-public class SimpleTest {
-    private static final Logger logger = LoggerFactory.getLogger(SimpleTest.class);
+public class SimpleDemo {
+    private static final Logger logger = LoggerFactory.getLogger(SimpleDemo.class);
 
     public static void main(String[] args) {
         String host = PropertiesUtil.getRedisProperties("host");

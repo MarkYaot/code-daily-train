@@ -10,8 +10,8 @@ import redis.clients.jedis.Pipeline;
 /**
  * 对比pipeline效率提升
  */
-public class PiplineTest {
-    private static final Logger logger = LoggerFactory.getLogger(PiplineTest.class);
+public class PiplineDemo {
+    private static final Logger logger = LoggerFactory.getLogger(PiplineDemo.class);
 
     public static void main(String[] args) {
         String host = PropertiesUtil.getRedisProperties("host");

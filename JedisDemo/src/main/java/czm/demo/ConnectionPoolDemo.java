@@ -11,8 +11,8 @@ import redis.clients.jedis.JedisPoolConfig;
 /**
  * 连接池的使用
  */
-public class ConnectionPoolTest {
-    private static final Logger logger = LoggerFactory.getLogger(ConnectionPoolTest.class);
+public class ConnectionPoolDemo {
+    private static final Logger logger = LoggerFactory.getLogger(ConnectionPoolDemo.class);
 
     public static void main(String[] args) {
         JedisPoolConfig config = new JedisPoolConfig();
