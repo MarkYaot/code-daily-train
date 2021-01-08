@@ -18,3 +18,10 @@
 
 ### Collections
 
+- Immutable Collections：不可变集合，节约空间和时间
+
+- Multiset：MultiSet可以方便的记录每个元素在集合中出现的次数
+
+- Multimap：Multimap满足单key对应value，摆脱Map<K, List<V>>或者Map<K, Set<V>>
+
+- BiMap：双向map，同时维护key到val以及val到key的映射

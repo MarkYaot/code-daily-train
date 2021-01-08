@@ -96,14 +96,14 @@ public class ChatServer {
             key.attach(username);
             String message = username + " is online";
             logger.info(message);
-            broadcaseMsg(username, message);
+            broadcastMsg(username, message);
         }
 
         private void dealSendMsg(SelectionKey key, String message) throws IOException {
             String username = (String) key.attachment();
             message = username + " says: " + message;
             logger.info(message);
-            broadcaseMsg(username, message);
+            broadcastMsg(username, message);
         }
 
         private void dealOffline(SelectionKey key) throws IOException {
@@ -111,10 +111,10 @@ public class ChatServer {
             key.channel().close();
             String message = username + " is offline";
             logger.info(message);
-            broadcaseMsg(username, message);
+            broadcastMsg(username, message);
         }
 
-        private void broadcaseMsg(String sourceUser, String message) throws IOException {
+        private void broadcastMsg(String sourceUser, String message) throws IOException {
             Map<String, SocketChannel> map = getConnectedChannel();
             for (String targetUser : map.keySet()) {
                 if (!StringUtils.isEmpty(targetUser) && !targetUser.equals(sourceUser)) {
