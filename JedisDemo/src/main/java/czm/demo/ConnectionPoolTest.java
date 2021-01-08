@@ -1,5 +1,9 @@
-package czm;
+package czm.demo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import czm.utils.PropertiesUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -8,10 +12,16 @@ import redis.clients.jedis.JedisPoolConfig;
  * 连接池的使用
  */
 public class ConnectionPoolTest {
+    private static final Logger logger = LoggerFactory.getLogger(ConnectionPoolTest.class);
+
     public static void main(String[] args) {
         JedisPoolConfig config = new JedisPoolConfig();
         config.setMaxTotal(10);
-        final JedisPool pool = new JedisPool(config, "192.168.2.124", 6379);
+
+        String host = PropertiesUtil.getRedisProperties("host");
+        Integer port = Integer.parseInt(PropertiesUtil.getRedisProperties("single.port"));
+        final JedisPool pool = new JedisPool(config, host, port);
+
         for (int i = 0; i < 50; i++) {
             new Thread(new Runnable() {
                 public void run() {
@@ -20,7 +30,7 @@ public class ConnectionPoolTest {
                     for (int i = 0; i < 1000; i++) {
                         jedis.set(Integer.toString(i), "val");
                     }
-                    System.out.println(Thread.currentThread().toString() + (System.currentTimeMillis() - time));
+                    logger.info(Thread.currentThread().toString() + (System.currentTimeMillis() - time));
                     //回收连接
                     jedis.close();
                 }

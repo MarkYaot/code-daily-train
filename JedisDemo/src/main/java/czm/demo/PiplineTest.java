@@ -1,5 +1,9 @@
-package czm;
+package czm.demo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import czm.utils.PropertiesUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -7,8 +11,12 @@ import redis.clients.jedis.Pipeline;
  * 对比pipeline效率提升
  */
 public class PiplineTest {
+    private static final Logger logger = LoggerFactory.getLogger(PiplineTest.class);
+
     public static void main(String[] args) {
-        Jedis jedis = new Jedis("192.168.2.124", 6379);
+        String host = PropertiesUtil.getRedisProperties("host");
+        Integer port = Integer.parseInt(PropertiesUtil.getRedisProperties("single.port"));
+        Jedis jedis = new Jedis(host, port);
         //清空老数据
         jedis.flushAll();
 
@@ -17,7 +25,7 @@ public class PiplineTest {
         for (int i = 0; i < 1000; i++) {
             jedis.set(Integer.toString(i), "val");
         }
-        System.out.println(System.currentTimeMillis() - time);
+        logger.info(String.valueOf(System.currentTimeMillis() - time));
 
         time = System.currentTimeMillis();
         Pipeline pipeline = jedis.pipelined();
@@ -25,6 +33,6 @@ public class PiplineTest {
             pipeline.set(Integer.toString(i), "val");
         }
         pipeline.sync();
-        System.out.println(System.currentTimeMillis() - time);
+        logger.info(String.valueOf(System.currentTimeMillis() - time));
     }
 }
