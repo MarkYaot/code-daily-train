@@ -11,21 +11,19 @@ import redis.clients.jedis.JedisCluster;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * JedisCluster的使用，操作redis集群
+ */
 public class ClusterDemo {
     private static final Logger logger = LoggerFactory.getLogger(ClusterDemo.class);
 
     public static void main(String[] args) {
         String host = PropertiesUtil.getRedisProperties("host");
+        Integer port = Integer.valueOf(PropertiesUtil.getRedisProperties("cluster1.port"));
         Set<HostAndPort> nodes = new HashSet<>();
-        nodes.add(new HostAndPort(host, Integer.parseInt(PropertiesUtil.getRedisProperties("cluster1.port"))));
-        nodes.add(new HostAndPort(host, Integer.parseInt(PropertiesUtil.getRedisProperties("cluster2.port"))));
-        nodes.add(new HostAndPort(host, Integer.parseInt(PropertiesUtil.getRedisProperties("cluster3.port"))));
-        nodes.add(new HostAndPort(host, Integer.parseInt(PropertiesUtil.getRedisProperties("cluster4.port"))));
-        nodes.add(new HostAndPort(host, Integer.parseInt(PropertiesUtil.getRedisProperties("cluster5.port"))));
-        nodes.add(new HostAndPort(host, Integer.parseInt(PropertiesUtil.getRedisProperties("cluster6.port"))));
+        nodes.add(new HostAndPort(host, port));
 
-        JedisCluster jedisCluster = new JedisCluster(nodes, new GenericObjectPoolConfig());
-        jedisCluster.del("name");
+        JedisCluster jedisCluster = new JedisCluster(nodes);
         jedisCluster.set("name", "czm");
         logger.info(jedisCluster.get("name"));
         jedisCluster.close();

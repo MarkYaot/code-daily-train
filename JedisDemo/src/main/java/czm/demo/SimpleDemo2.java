@@ -15,36 +15,6 @@ public class SimpleDemo2 {
     public static void main(String[] args) {
         String host = PropertiesUtil.getRedisProperties("host");
         Integer port = Integer.parseInt(PropertiesUtil.getRedisProperties("single.port"));
-        Jedis jedis = new Jedis(host, port);
-        //清空老数据
-        jedis.flushAll();
 
-        //写入100
-        long time = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
-            jedis.set(Integer.toString(i), "val");
-        }
-        logger.info(String.valueOf(System.currentTimeMillis() - time));
-
-        //写入1000
-        time = System.currentTimeMillis();
-        for (int i = 0; i < 1100; i++) {
-            jedis.set(Integer.toString(i), "val");
-        }
-        logger.info(String.valueOf(System.currentTimeMillis() - time));
-
-        //写入10000
-        time = System.currentTimeMillis();
-        for (int i = 1000; i < 11000; i++) {
-            jedis.set(Integer.toString(i), "val");
-        }
-        logger.info(String.valueOf(System.currentTimeMillis() - time));
-
-        //写入100000
-        time = System.currentTimeMillis();
-        for (int i = 20000; i < 120000; i++) {
-            jedis.set(Integer.toString(i), "val");
-        }
-        logger.info(String.valueOf(System.currentTimeMillis() - time));
     }
 }

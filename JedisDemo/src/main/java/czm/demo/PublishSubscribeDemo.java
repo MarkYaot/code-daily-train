@@ -13,15 +13,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class PublishSubscribeTest {
-    private static final Logger logger = LoggerFactory.getLogger(PublishSubscribeTest.class);
+public class PublishSubscribeDemo {
+    private static final Logger logger = LoggerFactory.getLogger(PublishSubscribeDemo.class);
 
     public static void main(String[] args) {
         // 替换成你的reids地址和端口
         String host = PropertiesUtil.getRedisProperties("host");
         Integer port = Integer.parseInt(PropertiesUtil.getRedisProperties("single.port"));
         JedisPool jedisPool = new JedisPool(new JedisPoolConfig(), host, port);
-        logger.info("redis pool is starting, redis ip %s, redis port %d", host, port);
+        logger.info("redis pool is starting, redis host {}, port {}", host, port);
 
         SubThread subThread = new SubThread(jedisPool);
         subThread.start();
