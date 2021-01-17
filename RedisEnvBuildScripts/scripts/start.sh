@@ -4,36 +4,34 @@ echo "please input redis type (single, ha, cluster, proxy, all):"
 
 read redis_type
 
-codis_path='/opt/codis/bin'
+codis_path='/opt/codis-3.2.2'
+redis_path='/opt/redis-5.0.7/src'
 log_path='/opt/redis/log'
 conf_path='/opt/redis/conf'
 data_path='/opt/redis/data'
 
 prepare_single_conf()
 {
-	cd $conf_path
-	cp $conf_path/redis.conf $conf_path/redis-single-6379.conf
+	cp ../conf/redis.conf $conf_path/redis-single-6379.conf
 	sed -i 's/6379/6379/g' $conf_path/redis-single-6379.conf
 }
 
 prepare_ha_conf()
 {
-	cd $conf_path
-	cp $conf_path/redis.conf $conf_path/redis-ha-6380.conf
-	cp $conf_path/redis.conf $conf_path/redis-ha-6381.conf
+	cp ../conf/redis.conf $conf_path/redis-ha-6380.conf
+	cp ../conf/redis.conf $conf_path/redis-ha-6381.conf
 	sed -i 's/6379/6380/g' $conf_path/redis-ha-6380.conf
 	sed -i 's/6379/6381/g' $conf_path/redis-ha-6381.conf
 }
 
 prepare_cluster_conf()
 {
-	cd $conf_path
-	cp $conf_path/redis.conf $conf_path/redis-cluster-8000.conf
-	cp $conf_path/redis.conf $conf_path/redis-cluster-8001.conf
-	cp $conf_path/redis.conf $conf_path/redis-cluster-8002.conf
-	cp $conf_path/redis.conf $conf_path/redis-cluster-8003.conf
-	cp $conf_path/redis.conf $conf_path/redis-cluster-8004.conf
-	cp $conf_path/redis.conf $conf_path/redis-cluster-8005.conf
+	cp ../conf/redis.conf $conf_path/redis-cluster-8000.conf
+	cp ../conf/redis.conf $conf_path/redis-cluster-8001.conf
+	cp ../conf/redis.conf $conf_path/redis-cluster-8002.conf
+	cp ../conf/redis.conf $conf_path/redis-cluster-8003.conf
+	cp ../conf/redis.conf $conf_path/redis-cluster-8004.conf
+	cp ../conf/redis.conf $conf_path/redis-cluster-8005.conf
 	sed -i 's/6379/8000/g' $conf_path/redis-cluster-8000.conf
 	sed -i 's/6379/8001/g' $conf_path/redis-cluster-8001.conf
 	sed -i 's/6379/8002/g' $conf_path/redis-cluster-8002.conf
@@ -47,16 +45,15 @@ prepare_cluster_conf()
 
 prepare_proxy_conf()
 {
-	cd $conf_path
-	cp $conf_path/redis-proxy.conf $conf_path/redis-proxy-9000.conf
-	cp $conf_path/redis-proxy.conf $conf_path/redis-proxy-9001.conf
-	cp $conf_path/redis-proxy.conf $conf_path/redis-proxy-9002.conf
-	cp $conf_path/redis-proxy.conf $conf_path/redis-proxy-9003.conf
-	cp $conf_path/redis-proxy.conf $conf_path/redis-proxy-9004.conf
-	cp $conf_path/redis-proxy.conf $conf_path/redis-proxy-9005.conf
-	cp $conf_path/proxy.toml $conf_path/proxy-1000.toml
-	cp $conf_path/proxy.toml $conf_path/proxy-1001.toml
-	cp $conf_path/proxy.toml $conf_path/proxy-1002.toml
+	cp ../conf/redis-proxy.conf $conf_path/redis-proxy-9000.conf
+	cp ../conf/redis-proxy.conf $conf_path/redis-proxy-9001.conf
+	cp ../conf/redis-proxy.conf $conf_path/redis-proxy-9002.conf
+	cp ../conf/redis-proxy.conf $conf_path/redis-proxy-9003.conf
+	cp ../conf/redis-proxy.conf $conf_path/redis-proxy-9004.conf
+	cp ../conf/redis-proxy.conf $conf_path/redis-proxy-9005.conf
+	cp ../conf/proxy.toml $conf_path/proxy-1000.toml
+	cp ../conf/proxy.toml $conf_path/proxy-1001.toml
+	cp ../conf/proxy.toml $conf_path/proxy-1002.toml
 	sed -i 's/6379/9000/g' $conf_path/redis-proxy-9000.conf
 	sed -i 's/6379/9001/g' $conf_path/redis-proxy-9001.conf
 	sed -i 's/6379/9002/g' $conf_path/redis-proxy-9002.conf
@@ -74,7 +71,7 @@ prepare_proxy_conf()
 start_single_redis()
 {
 	rm -f $data_path/6379/*
-	nohup redis-server $conf_path/redis-single-6379.conf --port 6379 > $log_path/6379.log 2>&1 &
+	nohup "${redis_path}/redis-server" $conf_path/redis-single-6379.conf --port 6379 > $log_path/6379.log 2>&1 &
 	sleep 1
 	flushdb 6379
 }
@@ -82,8 +79,8 @@ start_single_redis()
 start_ha_redis()
 {
 	rm -f $data_path/638*/* $data_path/638*/*
-	nohup redis-server $conf_path/redis-ha-6380.conf --port 6380 > $log_path/6380.log 2>&1 &
-	nohup redis-server $conf_path/redis-ha-6381.conf --port 6381 --slaveof 127.0.0.1 6380 > $log_path/6381.log 2>&1 &
+	nohup "${redis_path}/redis-server" $conf_path/redis-ha-6380.conf --port 6380 > $log_path/6380.log 2>&1 &
+	nohup "${redis_path}/redis-server" $conf_path/redis-ha-6381.conf --port 6381 --slaveof 127.0.0.1 6380 > $log_path/6381.log 2>&1 &
 	sleep 1
 	flushdb 6380
 }
@@ -91,14 +88,14 @@ start_ha_redis()
 start_cluster_redis()
 {
 	rm -f $data_path/800*/*
-	nohup redis-server $conf_path/redis-cluster-8000.conf > $log_path/8000.log 2>&1 &
-	nohup redis-server $conf_path/redis-cluster-8001.conf > $log_path/8001.log 2>&1 &
-	nohup redis-server $conf_path/redis-cluster-8002.conf > $log_path/8002.log 2>&1 &
-	nohup redis-server $conf_path/redis-cluster-8003.conf > $log_path/8003.log 2>&1 &
-	nohup redis-server $conf_path/redis-cluster-8004.conf > $log_path/8004.log 2>&1 &
-	nohup redis-server $conf_path/redis-cluster-8005.conf > $log_path/8005.log 2>&1 &
+	nohup "${redis_path}/redis-server" $conf_path/redis-cluster-8000.conf > $log_path/8000.log 2>&1 &
+	nohup "${redis_path}/redis-server" $conf_path/redis-cluster-8001.conf > $log_path/8001.log 2>&1 &
+	nohup "${redis_path}/redis-server" $conf_path/redis-cluster-8002.conf > $log_path/8002.log 2>&1 &
+	nohup "${redis_path}/redis-server" $conf_path/redis-cluster-8003.conf > $log_path/8003.log 2>&1 &
+	nohup "${redis_path}/redis-server" $conf_path/redis-cluster-8004.conf > $log_path/8004.log 2>&1 &
+	nohup "${redis_path}/redis-server" $conf_path/redis-cluster-8005.conf > $log_path/8005.log 2>&1 &
 	sleep 1
-	echo "yes" | redis-cli --cluster create 127.0.0.1:8000 127.0.0.1:8001 127.0.0.1:8002 127.0.0.1:8003 127.0.0.1:8004 127.0.0.1:8005 --cluster-replicas 1
+	echo "yes" | ${redis_path}/redis-cli --cluster create 127.0.0.1:8000 127.0.0.1:8001 127.0.0.1:8002 127.0.0.1:8003 127.0.0.1:8004 127.0.0.1:8005 --cluster-replicas 1
 	
 	flushdb 8000 8001 8002 8003 8004 8005
 }
@@ -117,7 +114,7 @@ start_proxy_redis()
 	nohup "${codis_path}/codis-proxy" "--config=$conf_path/proxy-1001.toml" "--dashboard=18080" "--log=$log_path/1001.log" "--log-level=INFO" "--ncpu=4" "--pidfile=/var/run/proxy-1001.pid" > "$log_path/1001.out" 2>&1 < /dev/null &
 	nohup "${codis_path}/codis-proxy" "--config=$conf_path/proxy-1002.toml" "--dashboard=18080" "--log=$log_path/1002.log" "--log-level=INFO" "--ncpu=4" "--pidfile=/var/run/proxy-1002.pid" > "$log_path/1002.out" 2>&1 < /dev/null &
 	nohup "${codis_path}/codis-dashboard" "--config=$conf_path/dashboard.toml" "--log=$log_path/18080.log" "--log-level=INFO" "--pidfile=/var/run/dashboard.pid" > "$log_path/18080.out" 2>&1 < /dev/null &
-	nohup "${codis_path}/codis-fe" "--assets-dir=/opt/redis/assets" "--filesystem=/tmp/codis" "--log=$log_path/9090.log" "--pidfile=/var/run/9090.pid" "--log-level=INFO" "--listen=0.0.0.0:9090" > "$log_path/9090.out" 2>&1 < /dev/null &
+	nohup "${codis_path}/codis-fe" "--assets-dir=/opt/codis-3.2.2/assets" "--filesystem=/tmp/codis" "--log=$log_path/9090.log" "--pidfile=/var/run/9090.pid" "--log-level=INFO" "--listen=0.0.0.0:9090" > "$log_path/9090.out" 2>&1 < /dev/null &
 	# 纳管Proxy节点
 	${codis_path}/codis-admin --dashboard=127.0.0.1:18080 --create-proxy --addr=127.0.0.1:11081
 	${codis_path}/codis-admin --dashboard=127.0.0.1:18080 --create-proxy --addr=127.0.0.1:11082
