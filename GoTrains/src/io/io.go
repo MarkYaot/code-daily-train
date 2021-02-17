@@ -60,11 +60,13 @@ func main() {
 	file, _ := os.OpenFile(name, os.O_WRONLY, 0666)
 	writer := MyWriter{file}
 	writer.Write([]byte("abcd"))
+	file.Close()
 
 	//读取文件
 	file, _ = os.Open(name)
 	bytes := make([]byte, 4)
 	reader := MyReader{file}
 	reader.Read(bytes)
+	file.Close()
 	fmt.Println(string(bytes))
 }
