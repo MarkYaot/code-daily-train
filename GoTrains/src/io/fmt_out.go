@@ -1,3 +1,5 @@
+//使用fmt格式化标准输出
+
 package main
 
 import "fmt"

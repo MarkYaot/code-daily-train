@@ -1,3 +1,5 @@
+//使用fmt读取标准输入
+
 package main
 
 import "fmt"
