@@ -10,27 +10,22 @@ import socket
 conn_list = []
 
 
-def receive_data(conn, addr):
+def receive_data(c, a):
     while True:
-        try:
-            content = conn.recv(1024).decode("utf-8")
-            if content is "exit":
-                break
-            else:
-                msg = "%s says:%s" % (addr, content)
-                for client in conn_list:
-                    client.send(msg.encode("utf-8"))
-        except:
-            print("Error!")
-    return
+        content = c.recv(1024).decode("utf-8")
+        msg = "%s says:%s" % (a, content)
+        for client in conn_list:
+            client["conn"].send(msg.encode("utf-8"))
+        if content == "exit\n":
+            break
 
 
 if __name__ == "__main__":
-    serversocket = socket.socket()
-    serversocket.bind(("127.0.0.1", 8080))
-    serversocket.listen()
+    s = socket.socket()
+    s.bind(("127.0.0.1", 8080))
+    s.listen()
 
     while True:
-        (conn, addr) = serversocket.accept()
+        (conn, addr) = s.accept()
         conn_list.append({"conn": conn, "addr": addr})
-        threading.Thread(target=receive_data(conn, addr))
+        threading.Thread(target=receive_data, args=(conn, addr)).start()
