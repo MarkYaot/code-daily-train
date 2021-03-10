@@ -10,7 +10,7 @@ import socket
 conn_list = []
 
 
-def receive_data(c, a):
+def forward_data(c, a):
     while True:
         content = c.recv(1024).decode("utf-8")
         msg = "%s says:%s" % (a, content)
@@ -28,4 +28,4 @@ if __name__ == "__main__":
     while True:
         (conn, addr) = s.accept()
         conn_list.append({"conn": conn, "addr": addr})
-        threading.Thread(target=receive_data, args=(conn, addr)).start()
+        threading.Thread(target=forward_data, args=(conn, addr)).start()
