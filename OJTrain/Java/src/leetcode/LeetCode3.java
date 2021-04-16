@@ -1,10 +1,10 @@
-package org.czm.leetcode;
+package leetcode;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class LeetCode3 {
-    public static int lengthOfLongestSubstring(String s) {
+    public int lengthOfLongestSubstring(String s) {
         int windowBegin;
         int maxWindowSize = 0;
 
@@ -20,9 +20,5 @@ public class LeetCode3 {
             maxWindowSize = Math.max(windowEnd - windowBegin, maxWindowSize);
         }
         return maxWindowSize;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(lengthOfLongestSubstring("aaaaaaaaaaaaaaaaa"));
     }
 }

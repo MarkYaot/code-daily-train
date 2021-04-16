@@ -1,7 +1,7 @@
-package org.czm.leetcode;
+package leetcode;
 
 public class LeetCode5 {
-    public static String longestPalindrome(String s) {
+    public String longestPalindrome(String s) {
         int windowBegin;
         int maxLength = 0;
         String maxString = "";
@@ -20,7 +20,7 @@ public class LeetCode5 {
         return maxString;
     }
 
-    public static boolean check(String s) {
+    public boolean check(String s) {
         int len = s.length();
         for (int i = 0; i < len / 2; i++) {
             if (s.charAt(i) != s.charAt(len - i - 1)) {
@@ -30,17 +30,4 @@ public class LeetCode5 {
         return true;
     }
 
-    public static void main(String[] args) {
-        System.out.println(longestPalindrome("babad"));
-        System.out.println(longestPalindrome("cbbd"));
-        System.out.println(longestPalindrome("aaaaaaaaaaaaaaaaaa"));
-        System.out.println(longestPalindrome("abcd"));
-    }
 }
-
-/**
- * 解法1：暴力
- * 解法2：暴力（中心扩散法）
- * 解法3：动态规划
- * 解法4：（Manacher）马拉车算法
- */

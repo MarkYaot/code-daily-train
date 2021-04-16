@@ -1,4 +1,4 @@
-package org.czm.leetcode;
+package leetcode;
 
 public class LeetCode1 {
     public int[] twoSum(int[] nums, int target) {

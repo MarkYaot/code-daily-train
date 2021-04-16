@@ -1,9 +1,7 @@
-package org.czm.leetcode;
-
-import org.czm.leetcode.structs.ListNode;
+package leetcode;
 
 public class LeetCode2 {
-    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode result = new ListNode(0);
 
         ListNode p1 = l1, p2 = l2, p3 = result;
@@ -49,20 +47,21 @@ public class LeetCode2 {
         return result.next;
     }
 
-    public static void main(String[] args) {
-        //342 + 465 = 364
-        ListNode p = new ListNode(2);
-        p.next = new ListNode(4);
-        p.next.next = new ListNode(3);
+    class ListNode {
+        public int val;
+        public ListNode next;
 
-        ListNode q = new ListNode(5);
-        q.next = new ListNode(6);
-        q.next.next = new ListNode(4);
+        public ListNode(int val) {
+            this.val = val;
+            this.next = null;
+        }
 
-        ListNode result = addTwoNumbers(p, q);
-        while (result != null) {
-            System.out.println(result.val);
-            result = result.next;
+        public ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
+
+        ListNode() {
         }
     }
 }

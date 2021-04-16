@@ -1,29 +1,7 @@
-package org.czm.leetcode;
-
-
-import org.czm.leetcode.structs.ListNode;
+package leetcode;
 
 public class LeetCode19 {
-    public static void main(String[] args) {
-        //test(10);
-        test(1);
-    }
-
-    private static void test(int n) {
-        ListNode head = new ListNode(0);
-        ListNode p = head;
-        for (int i = 1; i < n; i++) {
-            p.next = new ListNode(i, null);
-            p = p.next;
-        }
-        head = removeNthFromEnd(head, 1);
-        while (head != null) {
-            System.out.println(head.val);
-            head = head.next;
-        }
-    }
-
-    public static ListNode removeNthFromEnd(ListNode head, int n) {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
         if (head == null) {
             return null;
         }
@@ -48,5 +26,23 @@ public class LeetCode19 {
             current = current.next;
         }
         return head;
+    }
+
+    class ListNode {
+        public int val;
+        public ListNode next;
+
+        public ListNode(int val) {
+            this.val = val;
+            this.next = null;
+        }
+
+        public ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
+
+        ListNode() {
+        }
     }
 }

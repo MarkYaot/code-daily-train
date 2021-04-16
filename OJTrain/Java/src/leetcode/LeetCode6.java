@@ -1,10 +1,10 @@
-package org.czm.leetcode;
+package leetcode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LeetCode6 {
-    public static String convert(String s, int numRows) {
+    public String convert(String s, int numRows) {
         if (numRows == 1) {
             return s;
         }
@@ -33,10 +33,5 @@ public class LeetCode6 {
             });
         });
         return result.toString();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(convert("LEETCODEISHIRING", 3));
-        System.out.println(convert("A", 1));
     }
 }

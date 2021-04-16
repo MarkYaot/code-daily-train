@@ -1,7 +1,7 @@
-package org.czm.leetcode;
+package leetcode;
 
 public class LeetCode7 {
-    public static int reverse(int x) {
+    public int reverse(int x) {
         int p = x;
         if (x == -2147483648 || x == 2147483647 || x == 0) {
             return 0;
@@ -27,9 +27,5 @@ public class LeetCode7 {
             }
         }
         return x > 0 ? Integer.parseInt(num) : Integer.parseInt(num) * -1;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(reverse(-2147483648));
     }
 }
