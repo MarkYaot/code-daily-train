@@ -12,6 +12,7 @@
 - Redis：
   - JedisDemo：Jedis用法总结
   - LettuceDemo：Lettuce用法总结
+  - ProtocolDecode：实现解析redis协议
 - ChatRoom：编码练习，实现简单聊天室
 - ShellTrains：Shell编码练习
 - OJTrain：OJ刷题题解
@@ -20,7 +21,6 @@
 
 # To Do
 
-- 实现Redis协议解析模块
 - 实现Redis客户端
 - 实现简单MVC框架
 - 实现Cache框架，使用注解，支持第三方存储
