@@ -34,6 +34,9 @@ class Client:
             if num != -1:
                 return self._buffer[:num].decode('utf8')
 
+    def close(self):
+        self._socket.close()
+
 
 class Redis:
     _client = None
@@ -45,7 +48,11 @@ class Redis:
         self._client.set(key, val)
         return self._client.get_status_code_reply()
 
+    def close(self):
+        self._client.close()
+
 
 if __name__ == "__main__":
     redis = Redis("127.0.0.1", 6379)
     print(redis.set("name", "czm"), end="")
+    redis.close()
