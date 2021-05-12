@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net"
 	"net/http"
+	"os"
 	"sync"
 )
 
@@ -69,17 +69,50 @@ func (s *Server) start() {
 	s.serverStore()
 }
 
-func (s *Server) ListBucket(bucket string) ([]string, error) {
-	files, err := ioutil.ReadDir(s.DataPath + "/" + bucket)
+func (s *Server) ListObject(bucket string) ([]string, error) {
+	filePath := s.DataPath + "/" + bucket
+	_, err := os.Stat(filePath)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 		return nil, err
 	}
-	var fileList []string
-	for _, file := range files {
-		fileList = append(fileList, file.Name())
+
+	fileList, err := ioutil.ReadDir(filePath)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
 	}
-	return fileList, nil
+	var objectList []string
+	for _, file := range fileList {
+		objectList = append(objectList, file.Name())
+	}
+	return objectList, nil
+}
+
+func (s *Server) GetObject(bucket string, object string) (string, error) {
+	filePath := s.DataPath + "/" + bucket + "/" + object
+	_, err := os.Stat(filePath)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+
+	content, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	return string(content), nil
+}
+
+func (s *Server) UploadObject(content string, bucket string, object string) error {
+	filePath := s.DataPath + "/" + bucket + "/" + object
+	err := ioutil.WriteFile(filePath, []byte(content), 0777)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
 }
 
 func main() {
