@@ -1,0 +1,5 @@
+{
+  "Program": "$GOPATH/src/bin/golint.exe",
+  "Arguments": "$FilePath$",
+  "Working directory": "$ProjectFileDir$"
+}

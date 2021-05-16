@@ -1,0 +1,5 @@
+{
+  "Program": "$PYTHON_HOME/Scripts/pylint.exe",
+  "Arguments": "--reports=n --disable=C0103 $FilePath$",
+  "Working directory": "$ProjectFileDir$"
+}
